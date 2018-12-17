@@ -15,8 +15,12 @@ func login(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	context.JSON(http.StatusAccepted, gin.H{
-		"status":  http.StatusAccepted,
-		"message": "Request to user login",
+	if requestUser.Name != "root" || requestUser.Pass != "123" {
+		context.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"authUser": requestUser,
 	})
 }
