@@ -23,11 +23,17 @@ func InitConnection() {
 	{
 		v1.POST("/login", login)
 
-		v1.POST("/", createTodo)
-		v1.GET("/", fetchAllTodo)
-		v1.GET("/:id", fetchSingleTodo)
-		v1.PUT("/:id", updateTodo)
-		v1.DELETE("/:id", deleteTodo)
+		//v1.POST("/", createTodo)
+		//v1.GET("/", fetchAllTodo)
+		//v1.GET("/:id", fetchSingleTodo)
+		//v1.PUT("/:id", updateTodo)
+		//v1.DELETE("/:id", deleteTodo)
+
+		v1.POST("/unit", createUnit)
+		v1.GET("/unit", fetchAllUnit)
+		v1.GET("/unit:id", fetchSingleUnit)
+		v1.PUT("/unit:id", updateUnit)
+		v1.POST("/delete/unit", deleteUnit)
 	}
 	router.Run(":8081")
 }

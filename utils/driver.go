@@ -1,19 +1,31 @@
 package utils
 
-import mgo "gopkg.in/mgo.v2"
+import (
+	"fmt"
+
+	mgo "gopkg.in/mgo.v2"
+)
 
 var session *mgo.Session
 
 // TodosCollection -  Todo Model CRUD operation
 var TodosCollection *mgo.Collection
 
-func InitDriver() {
+const (
+	DTATBASE = "test001"
+)
+
+var DB *mgo.Database
+
+// InitDriver - Init the MongoDb Connection
+func InitDriver() error {
 	session, err := mgo.Dial("127.0.0.1")
 	if err != nil {
 		panic(err)
 	}
-	session.SetMode(mgo.Monotonic, true)
-
-	// get a Collection of todo
-	TodosCollection = session.DB("test-todo").C("todo")
+	DB = session.DB(DTATBASE)
+	TodosCollection = DB.C("todo")
+	UnitCollection = DB.C("unit")
+	fmt.Print(" Init Dirver Collection ", UnitCollection.FullName)
+	return nil
 }
