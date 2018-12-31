@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -38,34 +40,53 @@ func InsertUnit(unit m.Unit) error {
 
 // DeleteUnit - Delete Unit
 func DeleteUnit(unit m.Unit) error {
-	err := UnitCollection.Remove(&unit)
+	//Make Sure at least one unit have
+	units, err := FindAllUnit()
+	if err != nil {
+		return err
+	}
+	if len(units) > 1 {
+		err = UnitCollection.Remove(&unit)
+	} else {
+		return errors.New("အတိုင်းအတာယူနစ် တစ်ခု တည်ရှိရပါမည်")
+	}
 	return err
 }
 
 // InsertUnitConverter - Insert Unit Converter
-func InsertUnitConverter(unit m.Unit, con m.Converter) error {
-	unit.Converters = append(unit.Converters, con)
-	err := UnitCollection.UpdateId(unit.ID, &unit)
+func InsertUnitConverter(con m.Converter) error {
+	con.ID = bson.NewObjectId()
+	pUnit, err := FindByName(con.Map)
+	if err != nil {
+		return err
+	}
+	fmt.Print(" pUnit ID ", pUnit.ID)
+	fmt.Print(" con ID ", con.ID)
+	pUnit.Converters = append(pUnit.Converters, con)
+	err = UnitCollection.UpdateId(pUnit.ID, &pUnit)
 	return err
 }
 
 // DeleteUnitConverter - Delete Unit Converter
-func DeleteUnitConverter(unit m.Unit, con m.Converter) error {
-	//unit.Converters
-	contains(unit.Converters, con)
-	err := UnitCollection.UpdateId(unit.ID, &unit)
+func DeleteUnitConverter(con m.Converter) error {
+	pUnit, err := FindByName(con.Map)
+	if err != nil {
+		return err
+	}
+	fmt.Println(" before remove - ", len(pUnit.Converters))
+	pUnit.Converters = removeConverter(pUnit.Converters, &con)
+	fmt.Println(" After remove - ", len(pUnit.Converters))
+	err = UnitCollection.UpdateId(pUnit.ID, &pUnit)
 	return err
 }
 
-// Conatains - Check and delete
-func contains(s []m.Converter, e m.Converter) bool {
-	for i, a := range s {
-		if a == e {
-			copy(s[i:], s[i+1:])
-			//	s[len(s)-1] =
-			s = s[:len(s)-1]
-			return true
+func removeConverter(clients []m.Converter, connClient *m.Converter) []m.Converter {
+	for i := len(clients) - 1; i >= 0; i-- {
+		if clients[i].Name == connClient.Name {
+			copy(clients[i:], clients[i+1:])
+			clients[len(clients)-1] = m.Converter{}
+			clients = clients[:len(clients)-1]
 		}
 	}
-	return false
+	return clients
 }

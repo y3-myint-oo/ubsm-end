@@ -30,10 +30,11 @@ func InitConnection() {
 		//v1.DELETE("/:id", deleteTodo)
 
 		v1.POST("/unit", createUnit)
-		v1.GET("/unit", fetchAllUnit)
-		v1.GET("/unit:id", fetchSingleUnit)
-		v1.PUT("/unit:id", updateUnit)
 		v1.POST("/delete/unit", deleteUnit)
+		v1.GET("/unit", fetchAllUnit)
+		v1.POST("/unit/add/converter", addUnitConverter)
+		v1.POST("/unit/delete/converter", deleteUnitConverter)
+
 	}
 	router.Run(":8081")
 }
