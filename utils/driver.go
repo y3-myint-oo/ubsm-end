@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"fmt"
-
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -26,6 +24,7 @@ func InitDriver() error {
 	DB = session.DB(DTATBASE)
 	TodosCollection = DB.C("todo")
 	UnitCollection = DB.C("unit")
-	fmt.Print(" Init Dirver Collection ", UnitCollection.FullName)
+	SupplyCollection = DB.C("supply")
+	//	fmt.Print(" Init Dirver Collection ", UnitCollection.FullName)
 	return nil
 }

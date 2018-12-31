@@ -35,6 +35,9 @@ func InitConnection() {
 		v1.POST("/unit/add/converter", addUnitConverter)
 		v1.POST("/unit/delete/converter", deleteUnitConverter)
 
+		v1.GET("/supply", fetchAllSupply)
+		v1.POST("/add/supply", createSupply)
+		v1.POST("/delete/supply", deleteSupply)
 	}
 	router.Run(":8081")
 }
